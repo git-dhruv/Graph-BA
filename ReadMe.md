@@ -19,6 +19,10 @@ before, we need to multiply -1 after projection.
 # General Workflow
 From BAL dataset we get real 3D-2D correspondences of features and camera poses. In our algorithm, we add first normalize the data for numerical stability and then we perturb the states. Now the point cloud is messy, and we have to solve the optimization problem for the optimal 3D-2D correspondences using Ceres or g2o. 
 
+# Running
+Standard Build Routine, make sure you have ceres, g2o, Eigen, opencv. The compiler required is C++17. 
+
+
 # Results
 <table>
   <tr>
@@ -32,7 +36,7 @@ From BAL dataset we get real 3D-2D correspondences of features and camera poses.
   </table>
   <table>
   <tr>
-      <td align = "center"> <img src="./results/final/initial.png"> </td>
+      <td align = "center"> <img src="./results/final/initial03.png"> </td>
       <td align = "center"> <img src="./results/final/final202_L00.png"> </td>
   </tr>
     <tr>
