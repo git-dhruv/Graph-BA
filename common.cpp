@@ -113,3 +113,63 @@ BALProblem::BALProblem(const std::string &filename, bool use_quaternions) {
 }
 
 //////////////////////////////////////////////
+
+///////////////////Actual Math///////////////////////////
+void BALProblem::Normalize() {
+    /*
+    Normalize the position of points and camera such that they are in the center of coordinate system
+    This is just so that we remove the scale and bias in the data
+
+    We first normalize 3D points using a median. 
+    Using the same median, we normalize the Camera centers
+    */
+   
+    //We will store single Axis data in this
+    std::vector<double> singleAxis(num_points_);
+    Eigen::Vector3d median;
+    //This is a pointer that points to our loaded points
+    double *points = mutable_points();
+
+    //Compute Median along each axis
+    for(size_t i=0;i<3;i++){
+        for(size_t j=0;j<num_points_;j++){
+            tmp.at(j) = points[3*j+i];
+        }
+        median(i) = Median(&tmp);
+    }
+
+    //Compute the MAD of 3D points
+    //Equivalent of np.linalg.norm(points - median)
+    for (size_t i = 0; i < num_points_; ++i) {
+        VectorRef point(points + 3 * i, 3);
+        tmp[i] = (point - median).lpNorm<1>();
+    }
+
+    //MAD
+    const double median_absolute_deviation = Median(&tmp);
+
+    //Scale so that the MAD is 100
+    const double scale = 100.0 / median_absolute_deviation;
+
+    // Normalize the 3D points 
+    for (int i = 0; i < num_points_; ++i) {
+        VectorRef point(points + 3 * i, 3);
+        point = scale * (point - median);
+    }
+
+    //Uptil now we normalized the 3D points. now we normalize the camera position
+    //We just need to change the center coordinates of the camera
+    double *cameras = mutable_cameras();
+    double angle_axis[3];
+    double center[3];
+    for (size_t i = 0; i < num_cameras_; ++i) {
+        //Get single camera array
+        double *camera = cameras + camera_block_size() * i;
+        //Get the pose and location of camera
+        CameraToAngelAxisAndCenter(camera, angle_axis, center);
+        // Change the camera center = scale * (center - median)
+        VectorRef(center, 3) = scale * (VectorRef(center, 3) - median);
+        //Add that to the camera array
+        AngleAxisAndCenterToCamera(angle_axis, center, camera);
+    }
+}
