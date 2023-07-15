@@ -15,3 +15,8 @@ We will use BAL dataset from UWash. The data is provided in a text file where th
 BAL data assumes that the projection plane is behind the optical center of
 the camera when projecting, so if we calculate according to the model we used
 before, we need to multiply -1 after projection.
+
+# General Workflow
+From BAL dataset we get real 3D-2D correspondences of features and camera poses. In our algorithm, we add first normalize the data for numerical stability and then we perturb the states. Now the point cloud is messy, and we have to solve the optimization problem for the optimal 3D-2D correspondences using Ceres or g2o. 
+
+# Results
