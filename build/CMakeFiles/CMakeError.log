@@ -1,0 +1,55 @@
+Determining if the function sgemm_ exists failed with the following output:
+Change Dir: /home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_3c564/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_3c564.dir/build.make CMakeFiles/cmTC_3c564.dir/build
+gmake[1]: Entering directory '/home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_3c564.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=sgemm_ -o CMakeFiles/cmTC_3c564.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_3c564
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3c564.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=sgemm_ -rdynamic CMakeFiles/cmTC_3c564.dir/CheckFunctionExists.c.o -o cmTC_3c564 
+/usr/bin/ld: CMakeFiles/cmTC_3c564.dir/CheckFunctionExists.c.o: in function `main':
+CheckFunctionExists.c:(.text+0x14): undefined reference to `sgemm_'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_3c564.dir/build.make:99: cmTC_3c564] Error 1
+gmake[1]: Leaving directory '/home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_3c564/fast] Error 2
+
+
+
+Determining if the function cheev_ exists failed with the following output:
+Change Dir: /home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_7221e/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_7221e.dir/build.make CMakeFiles/cmTC_7221e.dir/build
+gmake[1]: Entering directory '/home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_7221e.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=cheev_ -o CMakeFiles/cmTC_7221e.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_7221e
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7221e.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=cheev_ -rdynamic CMakeFiles/cmTC_7221e.dir/CheckFunctionExists.c.o -o cmTC_7221e  /usr/lib/x86_64-linux-gnu/libblas.so /usr/lib/x86_64-linux-gnu/libf77blas.so /usr/lib/x86_64-linux-gnu/libatlas.so -lm -ldl 
+/usr/bin/ld: CMakeFiles/cmTC_7221e.dir/CheckFunctionExists.c.o: in function `main':
+CheckFunctionExists.c:(.text+0x14): undefined reference to `cheev_'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_7221e.dir/build.make:102: cmTC_7221e] Error 1
+gmake[1]: Leaving directory '/home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_7221e/fast] Error 2
+
+
+
+Determining if the function cheev_ exists failed with the following output:
+Change Dir: /home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_ccac1/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_ccac1.dir/build.make CMakeFiles/cmTC_ccac1.dir/build
+gmake[1]: Entering directory '/home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_ccac1.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=cheev_ -o CMakeFiles/cmTC_ccac1.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.22/Modules/CheckFunctionExists.c
+Linking C executable cmTC_ccac1
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ccac1.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=cheev_ -rdynamic CMakeFiles/cmTC_ccac1.dir/CheckFunctionExists.c.o -o cmTC_ccac1  /usr/lib/x86_64-linux-gnu/liblapack.so /usr/lib/x86_64-linux-gnu/libblas.so /usr/lib/x86_64-linux-gnu/libf77blas.so /usr/lib/x86_64-linux-gnu/libatlas.so -fortranlibs 
+cc: error: unrecognized command-line option ‘-fortranlibs’
+gmake[1]: *** [CMakeFiles/cmTC_ccac1.dir/build.make:103: cmTC_ccac1] Error 1
+gmake[1]: Leaving directory '/home/dhruv/codes/ba-git/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_ccac1/fast] Error 2
+
+
+

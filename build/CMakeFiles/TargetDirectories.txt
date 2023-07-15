@@ -1,0 +1,3 @@
+/home/dhruv/codes/ba-git/build/CMakeFiles/main.dir
+/home/dhruv/codes/ba-git/build/CMakeFiles/edit_cache.dir
+/home/dhruv/codes/ba-git/build/CMakeFiles/rebuild_cache.dir
