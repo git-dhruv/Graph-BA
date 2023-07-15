@@ -18,10 +18,10 @@ find_package( OpenCV REQUIRED )
 
 include_directories(${PROJECT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR} ${CSPARSE_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 
-# add_library(bal_common common.cpp)
+add_library(bal_common common.cpp)
 # add_executable(bundle_adjustment_g2o bundle_adjustment_g2o.cpp)
 add_executable(main main.cpp)
-target_link_libraries(main ${OpenCV_LIBS} ${PROJECT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR} ${CERES_LIBRARIES})
+target_link_libraries(main ${OpenCV_LIBS} ${PROJECT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR} ${CERES_LIBRARIES} bal_common)
 # target_link_libraries(bundle_adjustment_ceres ${CERES_LIBRARIES} bal_common)
 # target_link_libraries(bundle_adjustment_g2o ${G2O_LIBS} bal_common)
 

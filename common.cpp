@@ -9,6 +9,7 @@
 #include "common.h"
 #include "rotation.h"
 #include "random.h"
+#include <ceres/ceres.h>
 
 typedef Eigen::Map<Eigen::VectorXd> VectorRef;
 typedef Eigen::Map<const Eigen::VectorXd> ConstVectorRef;
@@ -36,43 +37,6 @@ double Median(std::vector<double> *data) {
     std::nth_element(data->begin(), mid_point, data->end());
     return *mid_point;
 }
-
-void BALProblem::WriteToPLYFile(const std::string &filename) const {
-    std::ofstream of(filename.c_str());
-
-    of << "ply"
-       << '\n' << "format ascii 1.0"
-       << '\n' << "element vertex " << num_cameras_ + num_points_
-       << '\n' << "property float x"
-       << '\n' << "property float y"
-       << '\n' << "property float z"
-       << '\n' << "property uchar red"
-       << '\n' << "property uchar green"
-       << '\n' << "property uchar blue"
-       << '\n' << "end_header" << std::endl;
-
-    // Export extrinsic data (i.e. camera centers) as green points.
-    double angle_axis[3];
-    double center[3];
-    for (int i = 0; i < num_cameras(); ++i) {
-        const double *camera = cameras() + camera_block_size() * i;
-        CameraToAngelAxisAndCenter(camera, angle_axis, center);
-        of << center[0] << ' ' << center[1] << ' ' << center[2]
-           << " 0 255 0" << '\n';
-    }
-
-    // Export the structure (i.e. 3D Points) as white points.
-    const double *points = parameters_ + camera_block_size() * num_cameras_;
-    for (int i = 0; i < num_points(); ++i) {
-        const double *point = points + i * point_block_size();
-        for (int j = 0; j < point_block_size(); ++j) {
-            of << point[j] << ' ';
-        }
-        of << " 255 255 255\n";
-    }
-    of.close();
-}
-
 BALProblem::BALProblem(const std::string &filename, bool use_quaternions) {
     // constructor
     FILE *fptr = fopen(filename.c_str(), "r");
@@ -112,9 +76,72 @@ BALProblem::BALProblem(const std::string &filename, bool use_quaternions) {
     fclose(fptr);
 }
 
+void BALProblem::WriteToPLYFile(const std::string &filename) const {
+    std::ofstream of(filename.c_str());
+
+    of << "ply"
+       << '\n' << "format ascii 1.0"
+       << '\n' << "element vertex " << num_cameras_ + num_points_
+       << '\n' << "property float x"
+       << '\n' << "property float y"
+       << '\n' << "property float z"
+       << '\n' << "property uchar red"
+       << '\n' << "property uchar green"
+       << '\n' << "property uchar blue"
+       << '\n' << "end_header" << std::endl;
+
+    // Export extrinsic data (i.e. camera centers) as green points.
+    double angle_axis[3];
+    double center[3];
+    for (int i = 0; i < num_cameras(); ++i) {
+        const double *camera = cameras() + camera_block_size() * i;
+        CameraToAngelAxisAndCenter(camera, angle_axis, center);
+        of << center[0] << ' ' << center[1] << ' ' << center[2]
+           << " 0 255 0" << '\n';
+    }
+
+    // Export the structure (i.e. 3D Points) as white points.
+    const double *points = parameters_ + camera_block_size() * num_cameras_;
+    for (int i = 0; i < num_points(); ++i) {
+        const double *point = points + i * point_block_size();
+        for (int j = 0; j < point_block_size(); ++j) {
+            of << point[j] << ' ';
+        }
+        of << " 255 255 255\n";
+    }
+    of.close();
+}
 //////////////////////////////////////////////
 
 ///////////////////Actual Math///////////////////////////
+void BALProblem::CameraToAngelAxisAndCenter(const double *camera,
+                                            double *angle_axis,
+                                            double *center) const {
+    VectorRef angle_axis_ref(angle_axis, 3);
+    
+        angle_axis_ref = ConstVectorRef(camera, 3);
+    
+
+    // c = -R't
+    Eigen::VectorXd inverse_rotation = -angle_axis_ref;
+    AngleAxisRotatePoint(inverse_rotation.data(),
+                         camera + camera_block_size() - 6,
+                         center);
+    VectorRef(center, 3) *= -1.0;
+}
+
+void BALProblem::AngleAxisAndCenterToCamera(const double *angle_axis,
+                                            const double *center,
+                                            double *camera) const {
+    ConstVectorRef angle_axis_ref(angle_axis, 3);
+    
+        VectorRef(camera, 3) = angle_axis_ref;
+    
+
+    // t = -R * c
+    AngleAxisRotatePoint(angle_axis, center, camera + camera_block_size() - 6);
+    VectorRef(camera + camera_block_size() - 6, 3) *= -1.0;
+}
 void BALProblem::Normalize() {
     /*
     Normalize the position of points and camera such that they are in the center of coordinate system
@@ -133,20 +160,20 @@ void BALProblem::Normalize() {
     //Compute Median along each axis
     for(size_t i=0;i<3;i++){
         for(size_t j=0;j<num_points_;j++){
-            tmp.at(j) = points[3*j+i];
+            singleAxis.at(j) = points[3*j+i];
         }
-        median(i) = Median(&tmp);
+        median(i) = Median(&singleAxis);
     }
 
     //Compute the MAD of 3D points
     //Equivalent of np.linalg.norm(points - median)
     for (size_t i = 0; i < num_points_; ++i) {
         VectorRef point(points + 3 * i, 3);
-        tmp[i] = (point - median).lpNorm<1>();
+        singleAxis[i] = (point - median).lpNorm<1>();
     }
 
     //MAD
-    const double median_absolute_deviation = Median(&tmp);
+    const double median_absolute_deviation = Median(&singleAxis);
 
     //Scale so that the MAD is 100
     const double scale = 100.0 / median_absolute_deviation;
