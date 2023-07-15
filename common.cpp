@@ -176,7 +176,7 @@ void BALProblem::Normalize() {
     const double median_absolute_deviation = Median(&singleAxis);
 
     //Scale so that the MAD is 100
-    const double scale = 100.0 / median_absolute_deviation;
+    const double scale = 1000.0 / median_absolute_deviation;
 
     // Normalize the 3D points 
     for (int i = 0; i < num_points_; ++i) {

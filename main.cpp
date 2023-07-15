@@ -21,7 +21,7 @@ int main(int argc, char **argv){
     bal_problem.Normalize();
     
     //Perturbing the data so that we get some optimization problem to solve
-    bal_problem.Perturb(.1, 0.5, 0.5); 
+    bal_problem.Perturb(0.1, 5, 5); 
     //Writing the perturbed file in initial pcl
     bal_problem.WriteToPLYFile("initial.ply");
     //Solving the Bundle Adjustment Problem
@@ -71,6 +71,7 @@ void SolveBA(BALProblem &bal_problem) {
     std::cout << "Solving ceres BA ... " << std::endl;
     ceres::Solver::Options options;
     options.linear_solver_type = ceres::LinearSolverType::SPARSE_SCHUR;
+    options.max_num_iterations = 100;
     options.minimizer_progress_to_stdout = true;
     ceres::Solver::Summary summary;
     ceres::Solve(options, &problem, &summary);
