@@ -25,10 +25,18 @@ From BAL dataset we get real 3D-2D correspondences of features and camera poses.
       <td align = "center"> <img src="./results/dubrovnik/orignal00.png"> </td>
       <td align = "center"> <img src="./results/dubrovnik/final01.png"> </td>
   </tr>
+  <tr>
+      <td align = "center">Initial</td>
+      <td align = "center">After BA</td>
+  </tr>
   </table>
   <table>
   <tr>
       <td align = "center"> <img src="./results/final/initial.png"> </td>
       <td align = "center"> <img src="./results/final/final202_L00.png"> </td>
+  </tr>
+    <tr>
+      <td align = "center">Initial</td>
+      <td align = "center">After BA</td>
   </tr>
   </table>
